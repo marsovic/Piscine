@@ -1,0 +1,13 @@
+12 
+Homme 0 10.0 100 200 clown1.jpg 
+Elephant 1 10.0 100 100 clown1.jpg
+Rat 	2   10.0   100 300 clown1.jpg
+Lion           3   15.0   100 400 clown1.jpg
+Gazelle       4   20.0  100 500 clown1.jpg
+Antilope 	5   20.0   200 100 clown1.jpg
+Leopard 	6   15.0   200 200 clown1.jpg
+Singe 	7   30.0   200 300 clown1.jpg
+Mante 	8   50.0   200 400 clown1.jpg
+Chenille      9   45.0   200 500 clown1.jpg
+Sauterelle   10 45.0   300 100 clown1.jpg
+Crisquet     11 60.0   300 200 clown1.jpg
