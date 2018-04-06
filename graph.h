@@ -1,74 +1,75 @@
 #ifndef GRAPH_H_INCLUDED
 #define GRAPH_H_INCLUDED
 #include <fstream>
+#include "grman/grman.h"
 
 /**************************************************************
-    Ici sont proposées 3 classes fondamentales
+    Ici sont proposï¿½es 3 classes fondamentales
             Vertex (=Sommet)
-            Edge (=Arête ou Arc)
+            Edge (=Arï¿½te ou Arc)
             Graph (=Graphe)
 
-    Les arêtes et les sommets et le graphe qu'ils constituent
-    "travaillent" étroitement ensemble : pour cette raison les
-    Vertex et Edge se déclarent amis (friend) de Graph pour que
-    ce dernier puisse librement accéder aux membres (y compris
+    Les arï¿½tes et les sommets et le graphe qu'ils constituent
+    "travaillent" ï¿½troitement ensemble : pour cette raison les
+    Vertex et Edge se dï¿½clarent amis (friend) de Graph pour que
+    ce dernier puisse librement accï¿½der aux membres (y compris
     protected ou private) de Vertex et Edge.
 
-    Ces Classes peuvent êtres complétées. Il est également possible
-    de les dériver mais il est malheureusement assez difficile
-    de dériver le "triplet" des 3 classes en maintenant des relations
-    cohérentes ( rechercher "c++ class covariance" et "c++ parallel inheritance"
-    pour commencer .. ). Il est donc sans doute préférable, si possible,
-    de "customiser" ces classes de base directement, sans héritage.
+    Ces Classes peuvent ï¿½tres complï¿½tï¿½es. Il est ï¿½galement possible
+    de les dï¿½river mais il est malheureusement assez difficile
+    de dï¿½river le "triplet" des 3 classes en maintenant des relations
+    cohï¿½rentes ( rechercher "c++ class covariance" et "c++ parallel inheritance"
+    pour commencer .. ). Il est donc sans doute prï¿½fï¿½rable, si possible,
+    de "customiser" ces classes de base directement, sans hï¿½ritage.
 
-    Le modèle proposé permet de représenter un graphe orienté éventuellement
-    pondéré, les arcs portent une ou des informations supplémentaire(s).
+    Le modï¿½le proposï¿½ permet de reprï¿½senter un graphe orientï¿½ ï¿½ventuellement
+    pondï¿½rï¿½, les arcs portent une ou des informations supplï¿½mentaire(s).
     Les relations/navigations Arcs -> Sommets et Sommets -> Arcs se font
     dans les 2 sens et utilisent des INDICES et NON PAS DES ADRESSES (pointeurs)
-    de telle sorte que la topologie du graphe puisse être assez facilement
-    lue et écrite en fichier, et bénéficie d'une bonne lisibilité en cas de bugs...
+    de telle sorte que la topologie du graphe puisse ï¿½tre assez facilement
+    lue et ï¿½crite en fichier, et bï¿½nï¿½ficie d'une bonne lisibilitï¿½ en cas de bugs...
 
-    Chaque arc possède 2 attributs principaux (en plus de son éventuelle pondération)
-        -> m_from (indice du sommet de départ de l'arc )
-        -> m_to (indice du sommet d'arrivée de l'arc )
+    Chaque arc possï¿½de 2 attributs principaux (en plus de son ï¿½ventuelle pondï¿½ration)
+        -> m_from (indice du sommet de dï¿½part de l'arc )
+        -> m_to (indice du sommet d'arrivï¿½e de l'arc )
 
-    Chaque sommet possède 2 liste d'arcs (en plus de ses attributs "internes", marquages...)
-        -> m_in (liste des indices des arcs arrivant au sommet : accès aux prédécesseurs)
-        -> m_out (liste des indices des arcs partant du sommet : accès aux successeurs)
+    Chaque sommet possï¿½de 2 liste d'arcs (en plus de ses attributs "internes", marquages...)
+        -> m_in (liste des indices des arcs arrivant au sommet : accï¿½s aux prï¿½dï¿½cesseurs)
+        -> m_out (liste des indices des arcs partant du sommet : accï¿½s aux successeurs)
 
-    Cependant le problème des indices (par rapport aux pointeurs) et qu'en cas
-    de destruction d'une entité (un arc et/ou un sommet sont enlevés du graphe) alors :
+    Cependant le problï¿½me des indices (par rapport aux pointeurs) et qu'en cas
+    de destruction d'une entitï¿½ (un arc et/ou un sommet sont enlevï¿½s du graphe) alors :
 
-    - Soit il faut reprendre toute la numérotation pour "boucher le trou"
-      (par exemple on a supprimé le sommet n°4, le sommet n°5 devient le 4, 6 devient 5 etc...)
-      ce qui pose des problèmes de stabilité et de cohérence, et une difficulté à ré-introduire
-      le(s) même(s) élément supprimé (au même indice)
+    - Soit il faut reprendre toute la numï¿½rotation pour "boucher le trou"
+      (par exemple on a supprimï¿½ le sommet nï¿½4, le sommet nï¿½5 devient le 4, 6 devient 5 etc...)
+      ce qui pose des problï¿½mes de stabilitï¿½ et de cohï¿½rence, et une difficultï¿½ ï¿½ rï¿½-introduire
+      le(s) mï¿½me(s) ï¿½lï¿½ment supprimï¿½ (au mï¿½me indice)
 
-    - Soit on admet que la numérotation des sommets et arcs n'est pas contigue, càd qu'il
-      peut y avoir des "trous" : sommets 0 1 5 7 8, pas de sommets 2 ni 3 ni 4 ni 6. La numérotation
+    - Soit on admet que la numï¿½rotation des sommets et arcs n'est pas contigue, cï¿½d qu'il
+      peut y avoir des "trous" : sommets 0 1 5 7 8, pas de sommets 2 ni 3 ni 4 ni 6. La numï¿½rotation
       est stable mais on ne peut plus utiliser un simple vecteur pour ranger la liste de tous
       les arcs et tous les sommets aux indices correspondants, on peut utiliser une map
-      qui associe un objet arc ou sommet à des indices arbitraires (pas forcément contigus)
+      qui associe un objet arc ou sommet ï¿½ des indices arbitraires (pas forcï¿½ment contigus)
 
-    C'est cette 2ème approche qui est proposée ici : dans la classe graphe vous trouverez
+    C'est cette 2ï¿½me approche qui est proposï¿½e ici : dans la classe graphe vous trouverez
         -> map<int, Edge>   m_edges
         -> map<int, Vertex> m_vertices    (le pluriel de vertex est vertices)
 
-    Il faudra être attentif au fait que par rapport à un simple vecteur, le parcours des éléments
+    Il faudra ï¿½tre attentif au fait que par rapport ï¿½ un simple vecteur, le parcours des ï¿½lï¿½ments
     ne pourra PAS se faire avec un simple for (int i=0; i<m_edges.size(); ++i) ...m_edges[i]...
-    et que les parcours à itérateur ne donneront pas directement des Edge ou des Vertex
-    mais des pairs, l'objet d'intérêt se trouvant dans "second" ("first" contenant l'indice)
+    et que les parcours ï¿½ itï¿½rateur ne donneront pas directement des Edge ou des Vertex
+    mais des pairs, l'objet d'intï¿½rï¿½t se trouvant dans "second" ("first" contenant l'indice)
                 for (auto &it = m_edges.begin(); it!=m_edges.end(); ++it) ...it->second...
     ou bien     for (auto &e : m_edges) ...e.second...
 
     Il n'est pas obligatoire d'utiliser ces classes pour le projet, vous pouvez faire les votres
 
-    Au niveau de l'interface, on dissocie une classe interface associée à chaque classe fondamentale
-    de telle sorte qu'il soit possible de travailler avec des graphes non représentés à l'écran
-    Imaginons par exemple qu'on doive générer 1000 permutations de graphes pour tester des
-    combinaisons, on ne souhaite pas représenter graphiquement ces 1000 graphes, et les
-    interfaces pèsent lourd en ressource, avec cette organisation on est libre de réserver ou
-    pas une interface de présentation associée aux datas (découplage données/interface)
+    Au niveau de l'interface, on dissocie une classe interface associï¿½e ï¿½ chaque classe fondamentale
+    de telle sorte qu'il soit possible de travailler avec des graphes non reprï¿½sentï¿½s ï¿½ l'ï¿½cran
+    Imaginons par exemple qu'on doive gï¿½nï¿½rer 1000 permutations de graphes pour tester des
+    combinaisons, on ne souhaite pas reprï¿½senter graphiquement ces 1000 graphes, et les
+    interfaces pï¿½sent lourd en ressource, avec cette organisation on est libre de rï¿½server ou
+    pas une interface de prï¿½sentation associï¿½e aux datas (dï¿½couplage donnï¿½es/interface)
 
 ***********************************************************************************************/
 
@@ -85,17 +86,17 @@
 
 class VertexInterface
 {
-    // Les (methodes des) classes amies pourront accéder
-    // directement aux attributs (y compris privés)
+    // Les (methodes des) classes amies pourront accï¿½der
+    // directement aux attributs (y compris privï¿½s)
     friend class Vertex;
     friend class EdgeInterface;
     friend class Graph;
 
     private :
 
-        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de déclarer
+        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de dï¿½clarer
         /// ici un widget pour qu'il apparaisse, il faut aussi le mettre en place et
-        /// le paramétrer ( voir l'implémentation du constructeur dans le .cpp )
+        /// le paramï¿½trer ( voir l'implï¿½mentation du constructeur dans le .cpp )
 
         // La boite qui contient toute l'interface d'un sommet
         grman::WidgetBox m_top_box;
@@ -112,54 +113,54 @@ class VertexInterface
         // Un label indiquant l'index du sommet
         grman::WidgetText m_label_idx;
 
-        // Une boite pour le label précédent
+        // Une boite pour le label prï¿½cï¿½dent
         grman::WidgetText m_box_label_idx;
 
     public :
 
-        // Le constructeur met en place les éléments de l'interface
-        // voir l'implémentation dans le .cpp
+        // Le constructeur met en place les ï¿½lï¿½ments de l'interface
+        // voir l'implï¿½mentation dans le .cpp
         VertexInterface(int idx, int x, int y, std::string pic_name="", int pic_idx=0);
 };
 
 
 class Vertex
 {
-    // Les (methodes des) classes amies pourront accéder
-    // directement aux attributs (y compris privés)
+    // Les (methodes des) classes amies pourront accï¿½der
+    // directement aux attributs (y compris privï¿½s)
     friend class Graph;
     friend class VertexInterface;
     friend class Edge;
     friend class EdgeInterface;
 
     private :
-        /// liste des indices des arcs arrivant au sommet : accès aux prédécesseurs
+        /// liste des indices des arcs arrivant au sommet : accï¿½s aux prï¿½dï¿½cesseurs
         std::vector<int> m_in;
 
-        /// liste des indices des arcs partant du sommet : accès aux successeurs
+        /// liste des indices des arcs partant du sommet : accï¿½s aux successeurs
         std::vector<int> m_out;
 
-        /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
+        /// un exemple de donnï¿½e associï¿½e ï¿½ l'arc, on peut en ajouter d'autres...
         double m_value;
 
-        /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
+        /// le POINTEUR sur l'interface associï¿½e, nullptr -> pas d'interface
         std::shared_ptr<VertexInterface> m_interface = nullptr;
 
         // Docu shared_ptr : https://msdn.microsoft.com/fr-fr/library/hh279669.aspx
-        // La ligne précédente est en gros équivalent à la ligne suivante :
+        // La ligne prï¿½cï¿½dente est en gros ï¿½quivalent ï¿½ la ligne suivante :
         // VertexInterface * m_interface = nullptr;
 
 
     public:
 
-        /// Les constructeurs sont à compléter selon vos besoin...
+        /// Les constructeurs sont ï¿½ complï¿½ter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
         Vertex (double value=0, VertexInterface *interface=nullptr) :
             m_value(value), m_interface(interface)  {  }
 
-        /// Vertex étant géré par Graph ce sera la méthode update de graph qui appellera
+        /// Vertex ï¿½tant gï¿½rï¿½ par Graph ce sera la mï¿½thode update de graph qui appellera
         /// le pre_update et post_update de Vertex (pas directement la boucle de jeu)
-        /// Voir l'implémentation Graph::update dans le .cpp
+        /// Voir l'implï¿½mentation Graph::update dans le .cpp
         void pre_update();
         void post_update();
 };
@@ -172,21 +173,21 @@ class Vertex
 
 class EdgeInterface
 {
-    // Les (methodes des) classes amies pourront accéder
-    // directement aux attributs (y compris privés)
+    // Les (methodes des) classes amies pourront accï¿½der
+    // directement aux attributs (y compris privï¿½s)
     friend class Edge;
     friend class Graph;
 
     private :
 
-        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de déclarer
+        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de dï¿½clarer
         /// ici un widget pour qu'il apparaisse, il faut aussi le mettre en place et
-        /// le paramétrer ( voir l'implémentation du constructeur dans le .cpp )
+        /// le paramï¿½trer ( voir l'implï¿½mentation du constructeur dans le .cpp )
 
         // Le WidgetEdge qui "contient" toute l'interface d'un arc
         grman::WidgetEdge m_top_edge;
 
-        // Une boite pour englober les widgets de réglage associés
+        // Une boite pour englober les widgets de rï¿½glage associï¿½s
         grman::WidgetBox m_box_edge;
 
         // Un slider de visualisation/modification du poids valeur de l'arc
@@ -197,43 +198,43 @@ class EdgeInterface
 
     public :
 
-        // Le constructeur met en place les éléments de l'interface
-        // voir l'implémentation dans le .cpp
+        // Le constructeur met en place les ï¿½lï¿½ments de l'interface
+        // voir l'implï¿½mentation dans le .cpp
         EdgeInterface(Vertex& from, Vertex& to);
 };
 
 
 class Edge
 {
-    // Les (methodes des) classes amies pourront accéder
-    // directement aux attributs (y compris privés)
+    // Les (methodes des) classes amies pourront accï¿½der
+    // directement aux attributs (y compris privï¿½s)
     friend class Graph;
     friend class EdgeInterface;
 
     private :
-        /// indice du sommet de départ de l'arc
+        /// indice du sommet de dï¿½part de l'arc
         int m_from;
 
-        /// indice du sommet d'arrivée de l'arc
+        /// indice du sommet d'arrivï¿½e de l'arc
         int m_to;
 
-        /// un exemple de donnée associée à l'arc, on peut en ajouter d'autres...
+        /// un exemple de donnï¿½e associï¿½e ï¿½ l'arc, on peut en ajouter d'autres...
         double m_weight;
 
-        /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
+        /// le POINTEUR sur l'interface associï¿½e, nullptr -> pas d'interface
         std::shared_ptr<EdgeInterface> m_interface = nullptr;
 
 
     public:
 
-        /// Les constructeurs sont à compléter selon vos besoin...
+        /// Les constructeurs sont ï¿½ complï¿½ter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
         Edge (double weight=0, EdgeInterface *interface=nullptr) :
             m_weight(weight), m_interface(interface)  {  }
 
-        /// Edge étant géré par Graph ce sera la méthode update de graph qui appellera
+        /// Edge ï¿½tant gï¿½rï¿½ par Graph ce sera la mï¿½thode update de graph qui appellera
         /// le pre_update et post_update de Edge (pas directement la boucle de jeu)
-        /// Voir l'implémentation Graph::update dans le .cpp
+        /// Voir l'implï¿½mentation Graph::update dans le .cpp
         void pre_update();
         void post_update();
 };
@@ -251,27 +252,54 @@ class GraphInterface
 
     private :
 
-        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de déclarer
+        /// Les widgets de l'interface. N'oubliez pas qu'il ne suffit pas de dï¿½clarer
         /// ici un widget pour qu'il apparaisse, il faut aussi le mettre en place et
-        /// le paramétrer ( voir l'implémentation du constructeur dans le .cpp )
+        /// le paramï¿½trer ( voir l'implï¿½mentation du constructeur dans le .cpp )
 
         /// La boite qui contient toute l'interface d'un graphe
         grman::WidgetBox m_top_box;
 
-        /// Dans cette boite seront ajoutés les (interfaces des) sommets et des arcs...
+        /// Dans cette boite seront ajoutï¿½s les (interfaces des) sommets et des arcs...
         grman::WidgetBox m_main_box;
 
-        /// Dans cette boite seront ajoutés des boutons de contrôle etc...
+        /// Dans cette boite seront ajoutï¿½s des boutons de contrï¿½le etc...
         grman::WidgetBox m_tool_box;
+        //Bouton Graphe1
+        grman::WidgetButton m_bouton_graph1;
+        grman::WidgetText m_bouton1_label;
+        //Bouton Graphe2
+        grman::WidgetButton m_bouton_graph2;
+        grman::WidgetText m_bouton2_label;
+        //Bouton Graphe3
+        grman::WidgetButton m_bouton_graph3;
+        grman::WidgetText m_bouton3_label;
+
+        //Label Sommets
+        grman::WidgetText m_label_sommet;
+        //Bouton Ajouter_Sommet
+        grman::WidgetButton m_bouton_add_vertex;
+        grman::WidgetText m_bouton_add_vertex_label;
+        //Bouton Supprimer_Sommet
+        grman::WidgetButton m_bouton_del_vertex;
+        grman::WidgetText m_bouton_del_vertex_label;
+
+        //Label ArÃªte
+        grman::WidgetText m_label_arete;
+        //Bouton Ajouter_ArÃªte
+        grman::WidgetButton m_bouton_add_edge;
+        grman::WidgetText m_bouton_add_edge_label;
+        //Bouton Supprimer_ArÃªte
+        grman::WidgetButton m_bouton_del_edge;
+        grman::WidgetText m_bouton_del_edge_label;
 
 
-        // A compléter éventuellement par des widgets de décoration ou
-        // d'édition (boutons ajouter/enlever ...)
+        // A complï¿½ter ï¿½ventuellement par des widgets de dï¿½coration ou
+        // d'ï¿½dition (boutons ajouter/enlever ...)
 
     public :
 
-        // Le constructeur met en place les éléments de l'interface
-        // voir l'implémentation dans le .cpp
+        // Le constructeur met en place les ï¿½lï¿½ments de l'interface
+        // voir l'implï¿½mentation dans le .cpp
         GraphInterface(int x, int y, int w, int h);
 };
 
@@ -280,19 +308,20 @@ class Graph
 {
     private :
 
-        /// La "liste" des arêtes
+        /// La "liste" des arï¿½tes
         std::map<int, Edge> m_edges;
 
         /// La liste des sommets
         std::map<int, Vertex> m_vertices;
 
-        /// le POINTEUR sur l'interface associée, nullptr -> pas d'interface
+        /// le POINTEUR sur l'interface associï¿½e, nullptr -> pas d'interface
         std::shared_ptr<GraphInterface> m_interface = nullptr;
+
 
 
     public:
 
-        /// Les constructeurs sont à compléter selon vos besoin...
+        /// Les constructeurs sont ï¿½ complï¿½ter selon vos besoin...
         /// Ici on ne donne qu'un seul constructeur qui peut utiliser une interface
         Graph (GraphInterface *interface=nullptr) :
             m_interface(interface)  {  }
@@ -300,14 +329,15 @@ class Graph
         void add_interfaced_vertex(int idx, double value, int x, int y, std::string pic_name="", int pic_idx=0 );
         void add_interfaced_edge(int idx, int vert1, int vert2, double weight=0);
         void charger_graphe(std::string fichier);
-        /// Méthode spéciale qui construit un graphe arbitraire (démo)
-        /// Voir implémentation dans le .cpp
-        /// Cette méthode est à enlever et remplacer par un système
+        void changer_graphe();
+        /// Mï¿½thode spï¿½ciale qui construit un graphe arbitraire (dï¿½mo)
+        /// Voir implï¿½mentation dans le .cpp
+        /// Cette mï¿½thode est ï¿½ enlever et remplacer par un systï¿½me
         /// de chargement de fichiers par exemple.
         void make_example();
 
 
-        /// La méthode update à appeler dans la boucle de jeu pour les graphes avec interface
+        /// La mï¿½thode update ï¿½ appeler dans la boucle de jeu pour les graphes avec interface
         void update();
 };
 
