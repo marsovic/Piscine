@@ -1,0 +1,28 @@
+12 
+NomEspece 0 10 80 180 clown1.jpg
+NomEspece 1 10 80 80 elephant.png
+NomEspece 2 10 80 280 campagnol.png
+NomEspece 3 15 80 380 lion.png
+NomEspece 4 20 80 480 gnou.png
+NomEspece 5 20 180 80 zebre.png
+NomEspece 6 15 384 365 guepard.png
+NomEspece 7 30 180 280 babouin.png
+NomEspece 8 50 180 380 fourmi.png
+NomEspece 9 45 180 480 hippopotame.png
+NomEspece 10 45 280 80 phacochere.png
+NomEspece 11 60 520 159 hyene.png
+14
+0 10 7 50
+1 0 1 50
+2 0 2 50
+3 1 6 50
+4 1 2 50
+5 2 4 50
+6 2 5 50
+8 6 7 50
+9 6 1 50
+10 7 8 50
+11 8 9 50
+12 10 9 50
+13 0 11 50
+14 11 1 50
