@@ -1,0 +1,27 @@
+savane 
+12 
+NomEspece 0 70 371 15 vegetaux.png
+NomEspece 1 30 -1 13 hippopotame.png
+NomEspece 2 100 -3 61 fourmi.png
+NomEspece 3 25 531 141 buffle.png
+NomEspece 4 50 -10 163 gnou.png
+NomEspece 5 30 -13 295 phacochere.png
+NomEspece 6 40 21 450 zebre.png
+NomEspece 7 70 81 -12 babouin.png
+NomEspece 8 16 609 27 elephant.png
+NomEspece 9 6 235 501 lion.png
+NomEspece 10 28 575 479 guepard.png
+NomEspece 11 58 711 239 hyene.png
+12
+0 0 1 50
+1 1 2 50
+2 0 3 50
+3 0 4 50
+4 0 5 50
+5 0 6 50
+6 0 7 50
+7 0 8 100
+8 3 9 50
+9 4 9 50
+10 5 9 50
+11 5 10 50

@@ -1,0 +1,19 @@
+marin 
+8 
+NomEspece 0 100 10 -36 krill.png
+NomEspece 1 90 214 -7 poisson.png
+NomEspece 2 80 457 63 calmar.png
+NomEspece 3 30 236 150 phoque.png
+NomEspece 4 50 287 382 manchot.png
+NomEspece 5 25 497 247 leopard.png
+NomEspece 6 10 3 439 baleine.png
+NomEspece 7 18 573 398 orque.png
+8
+0 0 1 68.75
+1 0 3 50
+2 0 4 50
+3 0 6 50
+4 1 2 50
+5 1 5 50
+6 2 5 50
+7 3 5 50

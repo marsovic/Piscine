@@ -1,0 +1,26 @@
+foret 
+10 
+NomEspece 0 50 232 44 vegetaux.png
+NomEspece 1 70 -9 410 fourmi.png
+NomEspece 2 20 -16 232 cerf.png
+NomEspece 3 10 47 61 sanglier.png
+NomEspece 4 16 315 227 chevreuil.png
+NomEspece 5 35 636 197 ecureuil.png
+NomEspece 6 40 502 -13 campagnol.png
+NomEspece 7 18 125 506 loup.png
+NomEspece 8 22 392 504 renard.png
+NomEspece 9 50 603 412 chouette.png
+13
+0 0 1 50
+1 0 2 50
+2 0 3 50
+3 0 4 50
+4 0 5 50
+5 0 6 50
+6 2 7 50
+7 3 7 50
+8 4 7 50
+9 5 7 50
+10 4 8 50
+11 5 8 50
+12 6 8 50
